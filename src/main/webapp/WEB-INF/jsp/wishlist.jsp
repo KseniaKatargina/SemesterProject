@@ -8,7 +8,7 @@
         <div class="productCards">
             <c:forEach var="product" items="${products}">
                 <div class="productCard">
-                    <img class="imgCard" src=${pageContext.request.contextPath}${product.getImg()}>
+                    <img class="imgCard" src=${product.getImg()}>
                     <p class="imgText">${product.text}</p>
                     <form action="<c:url value="/removeProduct"/>" method="post">
                         <input type="hidden" name="prodID" value="${product.id}">

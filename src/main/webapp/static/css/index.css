@@ -68,6 +68,7 @@
     flex: 70%;
     background-color: #a97f7f;
     padding: 20px;
+    min-height: 700px;
 }
 .main p {
     text-align: center;
@@ -76,7 +77,7 @@
     color: #1c1b1b;
 }
 .main_text{
-    margin-top: 100px;
+    margin-top: 350px;
 }
 .links{
     color: #333333;
@@ -211,6 +212,9 @@ input{
     border-radius: 5px;
     background-color: #fff6f6;
 }
+input:hover{
+    background-color: #fadddd;
+}
 .mainProfile{
     background-color: #a97f7f;
     padding: 30px;
@@ -219,10 +223,8 @@ input{
 
 }
 .profile{
-    padding-left: 40px;
     padding-top: 20px;
     width: 400px;
-    height: 400px;
     background-color: #eccfcf;
     border-radius: 10px 5px 10px 5px;
     border: 2px solid #8a4545;

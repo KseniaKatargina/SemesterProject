@@ -7,7 +7,7 @@ import ru.kpfu.itis.util.ConnectionProvider;
 
 import java.sql.*;
 
-public class UserRepositoryDBImpl {
+public class UserRepositoryDBImpl implements UserRepository{
     private ConnectionProvider connectionProvider;
 
     public UserRepositoryDBImpl(ConnectionProvider connectionProvider) {
@@ -27,6 +27,7 @@ public class UserRepositoryDBImpl {
     //language=SQL
     private final static String SQL_UPDATE_USER = "update users set username = (?), email = (?), password = (?), birthday = (?) where id = (?)";
 
+    @Override
     public void saveUser(User user) throws DBException {
 
         try ( PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
@@ -56,6 +57,7 @@ public class UserRepositoryDBImpl {
         }
     }
 
+    @Override
     public boolean findByEmail(String email) throws DBException {
         boolean isAlreadyLogin;
         try(PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_FIND_USER_BY_EMAIL)) {
@@ -68,6 +70,7 @@ public class UserRepositoryDBImpl {
         return isAlreadyLogin;
     }
 
+    @Override
     public boolean isLogin(User user) throws DBException {
         boolean isLogin;
         try(PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_FIND_REGISTER_USER)) {
@@ -81,6 +84,7 @@ public class UserRepositoryDBImpl {
         return isLogin;
     }
 
+    @Override
     public User userByEmail(String email) throws DBException {
         User user = null;
         try(PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_FIND_USER_BY_EMAIL)) {
@@ -101,6 +105,7 @@ public class UserRepositoryDBImpl {
         return user;
     }
 
+    @Override
     public void updateUser(User user) throws DBException {
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_UPDATE_USER)) {
             statement.setString(1,user.getUsername());

@@ -8,7 +8,7 @@ import ru.kpfu.itis.util.ConnectionProvider;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class WishlistRepositoryDBImpl {
+public class WishlistRepositoryDBImpl implements WishlistRepository{
     private ConnectionProvider connectionProvider;
 
     public WishlistRepositoryDBImpl(ConnectionProvider connectionProvider) {
@@ -36,6 +36,7 @@ public class WishlistRepositoryDBImpl {
     //language=SQL
     private static final  String SQL_UPDATE_TITLE = "update wishlists set title = (?) where id = (?) and user_id = (?)";
 
+    @Override
     public ArrayList<Wishlist> getUsersLists(User user) throws DBException {
         ArrayList<Wishlist> wishlists = new ArrayList<>();
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_SELECT_USERS_LISTS)) {
@@ -54,6 +55,7 @@ public class WishlistRepositoryDBImpl {
         return wishlists;
     }
 
+    @Override
     public void addList(Wishlist wishlist) throws DBException {
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_ADD_LIST, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -79,6 +81,8 @@ public class WishlistRepositoryDBImpl {
         }
     }
 
+
+    @Override
     public String getTitle(long id) throws DBException {
         String title = null;
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_SELECT_TITLE)) {
@@ -94,6 +98,7 @@ public class WishlistRepositoryDBImpl {
         return title;
     }
 
+    @Override
     public boolean isProductInList(Wishlist wishlist, long prodID) throws DBException {
         boolean isProductExist;
         try(PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_SELECT_PRODUCT)) {
@@ -107,6 +112,7 @@ public class WishlistRepositoryDBImpl {
         return isProductExist;
     }
 
+    @Override
     public void addProductInListEntry(long listID, long prodID) throws DBException {
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_INSERT_INTO_LISTS_ENTRY, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -125,6 +131,7 @@ public class WishlistRepositoryDBImpl {
         }
     }
 
+    @Override
     public void deleteList(long listID) throws DBException {
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_DELETE_LIST)) {
             statement.setLong(1, listID);
@@ -135,6 +142,7 @@ public class WishlistRepositoryDBImpl {
         }
     }
 
+    @Override
     public void updateTitle(String title, long listID, long userID) throws DBException {
         try (PreparedStatement statement = this.connectionProvider.getConnection().prepareStatement(SQL_UPDATE_TITLE)) {
             statement.setString(1, title);

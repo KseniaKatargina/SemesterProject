@@ -3,10 +3,7 @@ package ru.kpfu.itis.servlets;
 import ru.kpfu.itis.dao.UserRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
 import ru.kpfu.itis.model.User;
-import ru.kpfu.itis.services.GetYearsService;
-import ru.kpfu.itis.services.HashService;
-import ru.kpfu.itis.services.SecurityService;
-import ru.kpfu.itis.services.UserService;
+import ru.kpfu.itis.services.*;
 import ru.kpfu.itis.validators.BirthdayValidator;
 import ru.kpfu.itis.validators.EmailValidator;
 import ru.kpfu.itis.validators.PasswordValidator;
@@ -23,6 +20,7 @@ public class UserRegisterServlet extends HttpServlet {
     private UserRepositoryDBImpl userRepository;
     private SecurityService securityService;
     private UserService userService;
+    private FailedMessageService failedMessageService;
 
 
     @Override
@@ -31,6 +29,7 @@ public class UserRegisterServlet extends HttpServlet {
         userRepository = (UserRepositoryDBImpl) getServletContext().getAttribute("userDAO");
         securityService = (SecurityService) getServletContext().getAttribute("securityService");
         userService = (UserService) getServletContext().getAttribute("userService");
+        failedMessageService = (FailedMessageService) getServletContext().getAttribute("failedService");
     }
 
     @Override
@@ -48,7 +47,6 @@ public class UserRegisterServlet extends HttpServlet {
 
         String path = String.valueOf(request.getContextPath());
 
-        HttpSession session = request.getSession();
 
         int years = GetYearsService.getYears(birthday);
 
@@ -62,26 +60,26 @@ public class UserRegisterServlet extends HttpServlet {
         Optional<String > errorUsernameMessage = UsernameValidator.validateUsername(username);
 
         if(username.length() == 0 || email.length() == 0 || password.length() == 0 || birthday.length() == 0 || rePassword.length() == 0){
-            session.setAttribute("message", "Заполните все поля");
+            failedMessageService.setMessage("Заполните все поля",request,response);
             response.sendRedirect("/FailedRegister");
         } else {
                 if(securityService.isUserExist(userRepository, email)) {
-                    session.setAttribute("message", "Пользователь с таким логином существует");
+                    failedMessageService.setMessage("Пользователь с таким логином существует",request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 }else if (!password.equals(rePassword)) {
-                    session.setAttribute("message", "Пароли не совпадают");
+                    failedMessageService.setMessage("Пароли не совпадают",request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 } else if (errorEmailMessage.isPresent()){
-                    session.setAttribute("message" , errorEmailMessage.get());
+                    failedMessageService.setMessage(errorEmailMessage.get(),request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 } else if (errorPasswordMessage.isPresent()) {
-                    session.setAttribute("message" , errorPasswordMessage.get());
+                    failedMessageService.setMessage(errorBirthdayMessage.get(),request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 } else if (errorBirthdayMessage.isPresent()){
-                    session.setAttribute("message" , errorBirthdayMessage.get());
+                    failedMessageService.setMessage(errorBirthdayMessage.get(),request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 } else if (errorUsernameMessage.isPresent()){
-                    session.setAttribute("message" , errorUsernameMessage.get());
+                    failedMessageService.setMessage(errorUsernameMessage.get(),request,response);
                     response.sendRedirect(path +"/FailedRegister");
                 }
                 else {

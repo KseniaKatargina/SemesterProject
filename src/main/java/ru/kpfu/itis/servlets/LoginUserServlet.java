@@ -3,6 +3,7 @@ package ru.kpfu.itis.servlets;
 import ru.kpfu.itis.dao.UserRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
 import ru.kpfu.itis.model.User;
+import ru.kpfu.itis.services.FailedMessageService;
 import ru.kpfu.itis.services.HashService;
 import ru.kpfu.itis.services.SecurityService;
 import ru.kpfu.itis.services.UserService;
@@ -17,6 +18,7 @@ public class LoginUserServlet extends HttpServlet {
     private UserRepositoryDBImpl userRepository;
     private UserService userService;
     private SecurityService securityService;
+    private FailedMessageService failedMessageService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -24,6 +26,7 @@ public class LoginUserServlet extends HttpServlet {
         userService = (UserService) getServletContext().getAttribute("userService");
         userRepository = (UserRepositoryDBImpl) getServletContext().getAttribute("userDAO");
         securityService = (SecurityService) getServletContext().getAttribute("securityService");
+        failedMessageService = (FailedMessageService) getServletContext().getAttribute("failedService");
     }
 
     @Override
@@ -42,13 +45,12 @@ public class LoginUserServlet extends HttpServlet {
 
         User user = new User(email,hashPassword);
 
-        HttpSession session = request.getSession();
 
         if(!securityService.validate(userRepository, user)) {
-            session.setAttribute("message", "Неверно введен email или пароль");
+            failedMessageService.setMessage("Неверно введен email или пароль",request,response);
             response.sendRedirect(path + "/FailedRegister");
         } else if(email.length() == 0 || password.length() == 0) {
-            session.setAttribute("message", "Заполните все поля");
+            failedMessageService.setMessage("Заполните все поля",request,response);
             response.sendRedirect(path + "/FailedRegister");
         } else {
             User authUser;

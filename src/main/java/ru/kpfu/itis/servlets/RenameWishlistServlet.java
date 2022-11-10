@@ -4,6 +4,7 @@ import ru.kpfu.itis.dao.WishlistRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
 import ru.kpfu.itis.model.User;
 import ru.kpfu.itis.services.UserService;
+import ru.kpfu.itis.services.WishlistService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -14,20 +15,22 @@ import java.io.IOException;
 public class RenameWishlistServlet extends HttpServlet {
     private UserService userService;
     private WishlistRepositoryDBImpl wishlistRepository;
+    private WishlistService wishlistService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         wishlistRepository = (WishlistRepositoryDBImpl) getServletContext().getAttribute("wishlistDAO");
         userService = (UserService) getServletContext().getAttribute("userService");
+        wishlistService = (WishlistService) getServletContext().getAttribute("wishlistService");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long listID = Long.parseLong(request.getParameter("listID"));
         String title = request.getParameter("title");
-        request.setAttribute("listID", listID);
-        request.setAttribute("title", title);
+        wishlistService.addID(listID,request,response);
+        wishlistService.addTitle(title,request,response);
         request.getServletContext().getRequestDispatcher("/WEB-INF/jsp/renameWishlist.jsp").forward(request, response);
     }
 

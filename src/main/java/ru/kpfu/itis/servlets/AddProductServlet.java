@@ -4,7 +4,10 @@ import ru.kpfu.itis.dao.WishlistRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
 import ru.kpfu.itis.model.User;
 import ru.kpfu.itis.model.Wishlist;
+import ru.kpfu.itis.services.FailedMessageService;
+import ru.kpfu.itis.services.ProductService;
 import ru.kpfu.itis.services.UserService;
+import ru.kpfu.itis.services.WishlistService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -16,12 +19,13 @@ import java.rmi.RemoteException;
 public class AddProductServlet extends HttpServlet {
     private UserService userService;
     private WishlistRepositoryDBImpl wishlistRepository;
-
+    private FailedMessageService failedMessageService;
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         wishlistRepository = (WishlistRepositoryDBImpl) getServletContext().getAttribute("wishlistDAO");
         userService = (UserService) getServletContext().getAttribute("userService");
+        failedMessageService = (FailedMessageService) getServletContext().getAttribute("failedService");
     }
 
     @Override
@@ -42,7 +46,7 @@ public class AddProductServlet extends HttpServlet {
 
         try {
             if(wishlistRepository.isProductInList(wishlist, prodID)){
-                request.getSession().setAttribute("message", "Продукт уже есть на это листе");
+                failedMessageService.setMessage("Продукт уже есть на этом листе",request,response);
                 response.sendRedirect(path + "/failedAddProduct");
             } else {
                 wishlistRepository.addProductInListEntry(listID,prodID);

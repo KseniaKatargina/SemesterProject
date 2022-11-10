@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ProductRepositoryDBImpl {
+public class ProductRepositoryDBImpl implements ProductRepository{
     private ConnectionProvider connectionProvider;
 
     public ProductRepositoryDBImpl(ConnectionProvider connectionProvider) {
@@ -29,6 +29,7 @@ public class ProductRepositoryDBImpl {
     //language=SQL
     private  static final String SQL_DELETE_PRODUCT = "delete from wishlists_entry where product_id = (?) and list_id = (?)";
 
+    @Override
     public ArrayList<Product> getAllProducts() throws DBException {
         ArrayList<Product> products = new ArrayList<>();
         try (PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_SELECT_ALL_PRODUCTS)) {
@@ -46,6 +47,7 @@ public class ProductRepositoryDBImpl {
         return products;
     }
 
+    @Override
     public ArrayList<Long> getListProductsID(long userID, long listID) throws DBException {
         ArrayList<Long> products = new ArrayList<>();
         try (PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_SELECT_ALL_PRODUCTS_IN_LIST)) {
@@ -63,6 +65,7 @@ public class ProductRepositoryDBImpl {
         return products;
     }
 
+    @Override
     public Product getProducts(long prodID) throws DBException {
         Product product = new Product();
         try (PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_SELECT_PRODUCTS)) {
@@ -80,6 +83,7 @@ public class ProductRepositoryDBImpl {
         return product;
     }
 
+    @Override
     public void removeProductFromList(Long productID, Long listID) throws DBException {
         try (PreparedStatement ps = this.connectionProvider.getConnection().prepareStatement(SQL_DELETE_PRODUCT)) {
             ps.setLong(1,productID);

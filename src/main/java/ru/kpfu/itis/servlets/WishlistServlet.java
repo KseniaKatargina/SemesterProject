@@ -5,7 +5,9 @@ import ru.kpfu.itis.dao.WishlistRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
 import ru.kpfu.itis.model.Product;
 import ru.kpfu.itis.model.User;
+import ru.kpfu.itis.services.ProductService;
 import ru.kpfu.itis.services.UserService;
+import ru.kpfu.itis.services.WishlistService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -18,6 +20,8 @@ public class WishlistServlet extends HttpServlet {
     private ProductRepositoryDBImpl productRepository;
     private UserService userService;
     private WishlistRepositoryDBImpl wishlistRepository;
+    private ProductService productService;
+    private WishlistService wishlistService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -25,6 +29,8 @@ public class WishlistServlet extends HttpServlet {
         wishlistRepository = (WishlistRepositoryDBImpl) getServletContext().getAttribute("wishlistDAO");
         productRepository = (ProductRepositoryDBImpl) getServletContext().getAttribute("productDAO");
         userService = (UserService) getServletContext().getAttribute("userService");
+        productService = (ProductService) getServletContext().getAttribute("productService");
+        wishlistService = (WishlistService) getServletContext().getAttribute("wishlistService");
     }
 
     @Override
@@ -37,8 +43,8 @@ public class WishlistServlet extends HttpServlet {
 
         try {
             title = wishlistRepository.getTitle( Long.parseLong(listID));
-            request.setAttribute("listID", listID);
-            request.setAttribute("title", title);
+            wishlistService.addTitle(title,request,response);
+            wishlistService.addID(Long.parseLong(listID),request,response);
 
             ArrayList<Long> productsID = productRepository.getListProductsID(userID,Long.parseLong(listID));
 
@@ -47,7 +53,7 @@ public class WishlistServlet extends HttpServlet {
                 products.add(productRepository.getProducts(id));
             }
 
-            request.setAttribute("products", products);
+            productService.addProducts(products,request,response);
 
             request.getServletContext().getRequestDispatcher("/WEB-INF/jsp/wishlist.jsp").forward(request, response);
         } catch (DBException e) {

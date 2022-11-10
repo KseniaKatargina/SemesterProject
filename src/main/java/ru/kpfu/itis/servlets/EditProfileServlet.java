@@ -4,10 +4,7 @@ import ru.kpfu.itis.dao.UserRepositoryDBImpl;
 import ru.kpfu.itis.dao.WishlistRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
 import ru.kpfu.itis.model.User;
-import ru.kpfu.itis.services.GetYearsService;
-import ru.kpfu.itis.services.HashService;
-import ru.kpfu.itis.services.SecurityService;
-import ru.kpfu.itis.services.UserService;
+import ru.kpfu.itis.services.*;
 import ru.kpfu.itis.validators.BirthdayValidator;
 import ru.kpfu.itis.validators.EmailValidator;
 import ru.kpfu.itis.validators.PasswordValidator;
@@ -24,7 +21,7 @@ public class EditProfileServlet extends HttpServlet {
     private UserService userService;
     private SecurityService securityService;
     private UserRepositoryDBImpl userRepository;
-
+    private FailedMessageService failedMessageService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -32,6 +29,7 @@ public class EditProfileServlet extends HttpServlet {
         userRepository = (UserRepositoryDBImpl) getServletContext().getAttribute("userDAO");
         securityService = (SecurityService) getServletContext().getAttribute("securityService");
         userService = (UserService) getServletContext().getAttribute("userService");
+        failedMessageService = (FailedMessageService) getServletContext().getAttribute("failedService");
     }
 
     @Override
@@ -66,34 +64,34 @@ public class EditProfileServlet extends HttpServlet {
 
 
         if(newUsername.length() == 0 || newEmail.length() == 0 || newBirthday.length() == 0) {
-            request.getSession().setAttribute("message", "Поля имя, дата рождения и email должны быть заполнены");
+            failedMessageService.setMessage("Поля имя, дата рождения и email должны быть заполнены",request,response);
             response.sendRedirect(path + "/failedEditProfile");
 
         } else if (!newEmail.equals(email)) {
 
             if (securityService.isUserExist(userRepository, newEmail)) {
-                request.getSession().setAttribute("message", "Пользователь с таким логином существует");
+                failedMessageService.setMessage("Пользователь с таким логином существует",request,response);
                 response.sendRedirect(path + "/failedEditProfile");
             }
         } else if (errorEmailMessage.isPresent()){
-            request.getSession().setAttribute("message" , errorEmailMessage.get());
+            failedMessageService.setMessage(errorEmailMessage.get(),request,response);
             response.sendRedirect(path + "/failedEditProfile");
         } else if (errorBirthdayMessage.isPresent()) {
-            request.getSession().setAttribute("message", errorBirthdayMessage.get());
+            failedMessageService.setMessage(errorBirthdayMessage.get(),request,response);
             response.sendRedirect(path + "/failedEditProfile");
         } else if (!(oldPassword.length() == 0) && !(newPassword.length()==0) && !(reNewPassword.length() == 0)){
             String oldHashPassword = HashService.hashPassword(request.getParameter("oldPassword"));
             if (!password.equals(oldHashPassword)) {
-                request.getSession().setAttribute("message", "Неверный старый пароль");
+                failedMessageService.setMessage("Неверный старый пароль",request,response);
                 response.sendRedirect(path + "/failedEditProfile");
             } else if (!newPassword.equals(reNewPassword)) {
-                request.getSession().setAttribute("message", "Пароли не совпадают");
+                failedMessageService.setMessage("Пароли не совпадают",request,response);
                 response.sendRedirect(path + "/failedEditProfile");
             } else if (errorPasswordMessage.isPresent()){
-                request.getSession().setAttribute("message" , errorPasswordMessage.get());
+                failedMessageService.setMessage(errorPasswordMessage.get(),request,response);
                 response.sendRedirect(path + "/failedEditProfile");
             } else if (errorUsernameMessage.isPresent()){
-                request.getSession().setAttribute("message" , errorUsernameMessage.get());
+                failedMessageService.setMessage(errorUsernameMessage.get(),request,response);
                 response.sendRedirect(path + "/failedEditProfile");
             }else {
                 try {
@@ -110,7 +108,7 @@ public class EditProfileServlet extends HttpServlet {
             try {
                 User newUser = new User(userID, newUsername, newEmail, password, newBirthday, newYears);
                 userRepository.updateUser(newUser);
-                request.getSession().setAttribute("user", newUser);
+                userService.auth(newUser,request,response);
                 response.sendRedirect(path + "/profile");
             } catch (DBException e) {
                 e.printStackTrace();

@@ -3,8 +3,7 @@ import ru.kpfu.itis.dao.ProductRepositoryDBImpl;
 import ru.kpfu.itis.dao.UserRepositoryDBImpl;
 import ru.kpfu.itis.dao.WishlistRepositoryDBImpl;
 import ru.kpfu.itis.exceptions.DBException;
-import ru.kpfu.itis.services.SecurityService;
-import ru.kpfu.itis.services.UserService;
+import ru.kpfu.itis.services.*;
 import ru.kpfu.itis.util.ConnectionProvider;
 
 import javax.servlet.ServletContextEvent;
@@ -22,6 +21,9 @@ public class InitListener implements ServletContextListener {
             sce.getServletContext().setAttribute("wishlistDAO", new WishlistRepositoryDBImpl(connectionProvider));
             sce.getServletContext().setAttribute("securityService", new SecurityService());
             sce.getServletContext().setAttribute("userService" , new UserService());
+            sce.getServletContext().setAttribute("failedService", new FailedMessageService());
+            sce.getServletContext().setAttribute("productService" , new ProductService());
+            sce.getServletContext().setAttribute("wishlistService" , new WishlistService());
         } catch (DBException e) {
             throw new RuntimeException(e);
         }
