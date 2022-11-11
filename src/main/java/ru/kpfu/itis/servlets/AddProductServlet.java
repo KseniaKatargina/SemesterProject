@@ -17,14 +17,12 @@ import java.rmi.RemoteException;
 
 @WebServlet("/addProduct")
 public class AddProductServlet extends HttpServlet {
-    private UserService userService;
     private WishlistRepositoryDBImpl wishlistRepository;
     private FailedMessageService failedMessageService;
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         wishlistRepository = (WishlistRepositoryDBImpl) getServletContext().getAttribute("wishlistDAO");
-        userService = (UserService) getServletContext().getAttribute("userService");
         failedMessageService = (FailedMessageService) getServletContext().getAttribute("failedService");
     }
 

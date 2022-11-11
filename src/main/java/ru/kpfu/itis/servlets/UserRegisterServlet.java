@@ -73,7 +73,7 @@ public class UserRegisterServlet extends HttpServlet {
                     failedMessageService.setMessage(errorEmailMessage.get(),request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 } else if (errorPasswordMessage.isPresent()) {
-                    failedMessageService.setMessage(errorBirthdayMessage.get(),request,response);
+                    failedMessageService.setMessage(errorPasswordMessage.get(),request,response);
                     response.sendRedirect(path + "/FailedRegister");
                 } else if (errorBirthdayMessage.isPresent()){
                     failedMessageService.setMessage(errorBirthdayMessage.get(),request,response);
