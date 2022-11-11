@@ -59,7 +59,7 @@ public class LoginUserServlet extends HttpServlet {
                 userService.auth(authUser,request,response);
                 response.sendRedirect(path + "/mainPage");
             } catch (DBException e) {
-                throw  new RuntimeException(e);
+                throw  new ServletException(e);
             }
         }
     }

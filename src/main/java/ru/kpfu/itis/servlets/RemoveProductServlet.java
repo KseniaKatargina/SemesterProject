@@ -33,7 +33,7 @@ public class RemoveProductServlet extends HttpServlet {
             productRepository.removeProductFromList(productID,listID);
             response.sendRedirect(request.getContextPath() + "/myWishlists");
         } catch (DBException e) {
-            throw new RuntimeException(e);
+            throw new ServletException(e);
         }
     }
 }

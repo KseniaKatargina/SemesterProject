@@ -50,7 +50,7 @@ public class AddWishlistServlet extends HttpServlet {
                 wishlistRepository.addList(wishlist);
                 response.sendRedirect(path + "/myWishlists");
             } catch (DBException e) {
-                throw new RuntimeException(e);
+                throw new ServletException(e);
             }
         }
 

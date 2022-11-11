@@ -57,7 +57,7 @@ public class WishlistServlet extends HttpServlet {
 
             request.getServletContext().getRequestDispatcher("/WEB-INF/jsp/wishlist.jsp").forward(request, response);
         } catch (DBException e) {
-            throw  new RuntimeException(e);
+            throw  new ServletException(e);
         }
 
 

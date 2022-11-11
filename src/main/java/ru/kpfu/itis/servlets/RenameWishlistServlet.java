@@ -46,7 +46,7 @@ public class RenameWishlistServlet extends HttpServlet {
             wishlistRepository.updateTitle(title, listID, userID);
             response.sendRedirect(request.getContextPath() + "/myWishlists");
         } catch (DBException e) {
-           throw new RuntimeException(e);
+           throw new ServletException(e);
         }
 
     }

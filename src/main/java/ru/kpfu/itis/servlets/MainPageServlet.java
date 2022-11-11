@@ -46,7 +46,7 @@ public class MainPageServlet extends HttpServlet {
             wishlistService.addWishlists(wishlists,request,response);
             request.getServletContext().getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(request, response);
         } catch (DBException e) {
-            throw new RuntimeException(e);
+            throw new ServletException(e);
         }
     }
 

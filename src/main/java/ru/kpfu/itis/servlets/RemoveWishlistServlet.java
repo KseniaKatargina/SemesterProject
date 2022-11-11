@@ -31,7 +31,7 @@ public class RemoveWishlistServlet extends HttpServlet {
             wishlistRepository.deleteList(listID);
             response.sendRedirect(request.getContextPath() + "/myWishlists");
         } catch (DBException e) {
-            throw new RuntimeException(e);
+            throw new ServletException(e);
         }
 
     }

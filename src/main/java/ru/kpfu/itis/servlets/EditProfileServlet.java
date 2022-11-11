@@ -101,7 +101,7 @@ public class EditProfileServlet extends HttpServlet {
                     userService.auth(user,request,response);
                     response.sendRedirect(path + "/profile");
                 } catch (DBException e) {
-                    e.printStackTrace();
+                    throw new ServletException(e);
                 }
             }
         } else{
@@ -111,7 +111,7 @@ public class EditProfileServlet extends HttpServlet {
                 userService.auth(newUser,request,response);
                 response.sendRedirect(path + "/profile");
             } catch (DBException e) {
-                e.printStackTrace();
+                throw new ServletException(e);
             }
         }
     }

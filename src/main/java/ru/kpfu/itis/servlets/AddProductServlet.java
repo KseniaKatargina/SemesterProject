@@ -53,7 +53,7 @@ public class AddProductServlet extends HttpServlet {
                 response.sendRedirect(path + "/mainPage");
             }
         } catch (DBException e) {
-            throw new RuntimeException(e);
+            throw new ServletException(e);
         }
     }
 }
