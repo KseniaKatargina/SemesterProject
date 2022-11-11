@@ -96,7 +96,7 @@
     padding-left: 30px;
     padding-top: 10px;
     min-width: 600px;
-    height: 600px;
+    height: 680px;
     background-color: #eccfcf;
     border-radius: 10px 5px 10px 5px;
     border: 2px solid #8a4545;
@@ -205,9 +205,7 @@
 label{
     margin: 5px;
 }
-.edit{
-    padding-left: 90px;
-}
+
 input{
     border-radius: 5px;
     background-color: #fff6f6;
@@ -294,4 +292,7 @@ input:hover{
     border-radius: 10px 5px 10px 5px;
     border: 2px solid #8a4545;
     height: 350px;
+}
+.small{
+    font-size: small;
 }

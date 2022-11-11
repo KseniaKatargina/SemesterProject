@@ -19,16 +19,19 @@
             </c:forEach>
 
         </div>
+        <br>
+        <br>
         <form action="<c:url value="/removeWishlist"/>" method="post">
             <input type="hidden" name="listID" value="${listID}">
             <input type="submit" value="Удалить весь лист">
         </form>
+        <br>
         <form action="<c:url value="/renameWishlist"/>" method="get">
             <input type="hidden" name="listID" value="${listID}">
             <input type="hidden" name="title" value="${title}">
             <input type="submit" value="Редактировать название">
         </form>
-
+        <br>
         <a href="<c:url value="/myWishlists"/>" class="remove"><i class="fa fa-reply fa-1x"></i>  К моим листам</a>
     </div>
 </t:mainLayout>

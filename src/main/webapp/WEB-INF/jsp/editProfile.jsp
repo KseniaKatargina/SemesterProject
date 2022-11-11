@@ -53,7 +53,7 @@
                 <div class="edit">
                     <input value="Изменить" type="submit" name="изменить">
                 </div>
-                <div class="exit">
+                <div class="exit" style="text-align: left">
                     <a href="<c:url value="/profile"/>"><i class="fa fa-reply fa-1x"></i>  Назад</a>
                 </div>
             </div>
